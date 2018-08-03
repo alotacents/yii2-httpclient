@@ -27,8 +27,12 @@ class CurlTransport extends Transport
     public function send($request)
     {
         $request->beforeSend();
-
-        $curlOptions = $this->prepare($request);
+        
+        $curlOptions = [
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 20,
+        ];
+        $curlOptions = ArrayHelper::merge($curlOptions, $this->prepare($request));
         $curlResource = $this->initCurl($curlOptions);
 
         $responseHeaders = [];
